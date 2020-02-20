@@ -1,0 +1,29 @@
+nginx:
+    build: ./nginx/
+    ports:
+        - "80:80"
+    links:
+        - node:node
+    container_name: nginx
+
+mongo:
+    build: ./mongo/
+    ports:
+        - "27017:27017"
+    container_name: mongo
+    volumes:
+        - /home/
+node:
+    build: ./node/
+    ports:
+        - "3000"
+    links:
+        - mongo:mongo
+    #external_links:
+    #    - mongo
+    container_name: todo-app
+    volumes_from:
+        - mongo
+    environment:
+        MONGOLAB_URI: "mongodb://mongo/todos"
+        PORT: 3000
